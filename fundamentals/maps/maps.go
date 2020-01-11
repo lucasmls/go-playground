@@ -21,4 +21,23 @@ func main() {
 	fmt.Println(salary)
 	delete(salary, "Luis Souza")
 	fmt.Println(salary)
+	fmt.Println("-----")
+
+	usersByLeter := map[string]map[string]float64{
+		"L": {
+			"Lucas Mendes": 123.12,
+			"Laisla":       2550.00,
+		},
+		"G": {
+			"Gabriel Lima": 7500.50,
+		},
+		"A": {
+			"Ana Silveira": 3200.00,
+		},
+	}
+
+	for letter, users := range usersByLeter {
+		fmt.Println(letter, "-", users)
+	}
+
 }
