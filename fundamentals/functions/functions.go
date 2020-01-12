@@ -23,6 +23,10 @@ func printResult(result int) {
 	fmt.Println(result)
 }
 
+func exec(fn func(int, int) int, n1 int, n2 int) int {
+	return fn(n1, n2)
+}
+
 func main() {
 	result := sum(10, 10)
 	printResult(result)
@@ -35,4 +39,7 @@ func main() {
 	}
 
 	fmt.Println(sum(10, 23))
+
+	executedSum := exec(sum, 20, 213)
+	fmt.Println(executedSum)
 }
