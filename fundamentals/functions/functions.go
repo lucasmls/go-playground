@@ -29,4 +29,10 @@ func main() {
 
 	name, surname := getNameAndSurname("Lucas Mendes")
 	fmt.Println(name, surname)
+
+	sum := func(n1, n2 int) int {
+		return n1 + n2
+	}
+
+	fmt.Println(sum(10, 23))
 }
