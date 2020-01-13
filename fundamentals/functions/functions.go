@@ -27,6 +27,15 @@ func exec(fn func(int, int) int, n1 int, n2 int) int {
 	return fn(n1, n2)
 }
 
+func calcAverage(values ...float64) float64 {
+	total := 0.0
+	for _, num := range values {
+		total += num
+	}
+
+	return total / float64(len(values))
+}
+
 var multiply = func(n1, n2 int) int {
 	return n1 * n2
 }
@@ -42,4 +51,8 @@ func main() {
 
 	executedMultiplication := exec(multiply, 2, 4)
 	fmt.Println(executedMultiplication)
+
+	average := calcAverage(2.34, 9.0, 8.3)
+	fmt.Println(average)
+
 }
