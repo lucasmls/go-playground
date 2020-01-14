@@ -36,6 +36,14 @@ func calcAverage(values ...float64) float64 {
 	return total / float64(len(values))
 }
 
+func printApproved(approved ...string) {
+	fmt.Println("Approved:")
+	for i, person := range approved {
+		fmt.Printf("(%d) %s \n", i+1, person)
+	}
+
+}
+
 var multiply = func(n1, n2 int) int {
 	return n1 * n2
 }
@@ -54,5 +62,8 @@ func main() {
 
 	average := calcAverage(2.34, 9.0, 8.3)
 	fmt.Println(average)
+
+	approved := []string{"Lucas", "Laisla"}
+	printApproved(approved...)
 
 }
