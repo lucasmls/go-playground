@@ -61,6 +61,17 @@ func factorial(n int) (int, error) {
 	}
 }
 
+func isAbove500(n int) int {
+	defer fmt.Println("The result will be returned rigth now:")
+	if n > 5000 {
+		fmt.Printf("%d is above 5000\n", n)
+		return n
+	}
+
+	fmt.Printf("%d is below 5000\n", n)
+	return n
+}
+
 func main() {
 	result := sum(10, 10)
 	printResult(result)
@@ -85,5 +96,8 @@ func main() {
 		return
 	}
 
-	fmt.Printf("Factorial of 5 %d", factorialOf5)
+	fmt.Printf("Factorial of 5 %d\n", factorialOf5)
+
+	isAbove500(1233)
+	isAbove500(6742)
 }
