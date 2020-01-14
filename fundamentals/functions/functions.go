@@ -41,11 +41,24 @@ func printApproved(approved ...string) {
 	for i, person := range approved {
 		fmt.Printf("(%d) %s \n", i+1, person)
 	}
-
 }
 
 var multiply = func(n1, n2 int) int {
 	return n1 * n2
+}
+
+// we could use a "uint", so that we would not need to
+// verifiy if the number is below 0
+func factorial(n int) (int, error) {
+	switch {
+	case n < 0:
+		return -1, fmt.Errorf("%d is a invalid number", n)
+	case n == 0:
+		return 1, nil
+	default:
+		lastFactorial, _ := factorial(n - 1)
+		return n * lastFactorial, nil
+	}
 }
 
 func main() {
@@ -66,4 +79,11 @@ func main() {
 	approved := []string{"Lucas", "Laisla"}
 	printApproved(approved...)
 
+	factorialOf5, err := factorial(5)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Printf("Factorial of 5 %d", factorialOf5)
 }
