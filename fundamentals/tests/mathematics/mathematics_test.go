@@ -5,6 +5,7 @@ import "testing"
 const defaultError = "Expected value was %v, but the calculated result id %v"
 
 func TestAverage(t *testing.T) {
+	t.Parallel()
 	expectedResult := 5.0
 	result := Average(5.0, 5.0, 5.0)
 

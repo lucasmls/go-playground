@@ -7,6 +7,7 @@ import "strings"
 const errorMessage = "%s (parte: %s) - índices: esperado (%d) <> encontrado (%d)."
 
 func TestIndex(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		text     string
 		part     string
