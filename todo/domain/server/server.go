@@ -1,9 +1,14 @@
 package server
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/lucasmls/todo/domain"
+)
 
 // ServiceInput ...
-type ServiceInput struct{}
+type ServiceInput struct {
+	UsersProvider domain.UsersProvider
+}
 
 // Service ...
 type Service struct {
@@ -23,7 +28,16 @@ func NewService(in ServiceInput) *Service {
 // Engine ...
 func (s Service) Engine() *gin.Engine {
 	router := gin.Default()
-	router.GET("/ping", s.pingEndpoint())
+
+	router.GET(
+		"/ping",
+		s.pingEndpoint(),
+	)
+
+	router.POST(
+		"/user/register",
+		s.registerUserEndpoint(),
+	)
 
 	return router
 }

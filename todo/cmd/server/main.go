@@ -1,11 +1,18 @@
 package main
 
-import "github.com/lucasmls/todo/domain/server"
-
-import "fmt"
+import (
+	"fmt"
+	"github.com/lucasmls/todo/domain/server"
+	"github.com/lucasmls/todo/domain/user"
+)
 
 func main() {
-	srvr := server.NewService(server.ServiceInput{})
+
+	user := user.NewService(user.ServiceInput{})
+
+	srvr := server.NewService(server.ServiceInput{
+		UsersProvider: user,
+	})
 
 	errCh := srvr.Run()
 	for err := range errCh {
