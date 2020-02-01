@@ -4,11 +4,18 @@ import (
 	"fmt"
 	"github.com/lucasmls/todo/domain/server"
 	"github.com/lucasmls/todo/domain/user"
+	"github.com/lucasmls/todo/infra/postgres"
 )
 
 func main() {
 
-	user := user.NewService(user.ServiceInput{})
+	postgres := postgres.NewClient(postgres.ClientInput{
+		Endpoint: "user=postgres port=1234 password=postgres dbname=go_todo sslmode=disable",
+	})
+
+	user := user.NewService(user.ServiceInput{
+		Postgres: postgres,
+	})
 
 	srvr := server.NewService(server.ServiceInput{
 		UsersProvider: user,

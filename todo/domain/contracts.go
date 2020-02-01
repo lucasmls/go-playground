@@ -2,5 +2,5 @@ package domain
 
 // UsersProvider ...
 type UsersProvider interface {
-	Register()
+	Register() ([]*User, string)
 }

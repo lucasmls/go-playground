@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,7 @@ func (s Service) pingEndpoint() func(ctx *gin.Context) {
 	}
 }
 
-func (s Service) registerUserEndpoint() func(ctx *gin.Context) {
+func (s Service) listUsersEndpoint() func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 
 		payload := domain.User{}
@@ -22,8 +23,11 @@ func (s Service) registerUserEndpoint() func(ctx *gin.Context) {
 			fmt.Println("Error when getting the payload")
 		}
 
-		s.in.UsersProvider.Register()
+		users, err := s.in.UsersProvider.Register()
+		if err != "" {
+			log.Panic(err)
+		}
 
-		ctx.JSON(http.StatusCreated, MessageResponse{Message: "User registered"})
+		ctx.JSON(http.StatusCreated, users)
 	}
 }

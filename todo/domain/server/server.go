@@ -34,9 +34,9 @@ func (s Service) Engine() *gin.Engine {
 		s.pingEndpoint(),
 	)
 
-	router.POST(
-		"/user/register",
-		s.registerUserEndpoint(),
+	router.GET(
+		"/user",
+		s.listUsersEndpoint(),
 	)
 
 	return router
