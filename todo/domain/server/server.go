@@ -34,10 +34,13 @@ func (s Service) Engine() *gin.Engine {
 		s.pingEndpoint(),
 	)
 
-	router.GET(
+	usersGroup := router.Group(
 		"/user",
-		s.listUsersEndpoint(),
 	)
+	{
+		usersGroup.GET("", s.listUsersEndpoint())
+		usersGroup.POST("", s.registerUsersEndpoint())
+	}
 
 	return router
 }

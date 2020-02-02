@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -17,17 +16,28 @@ func (s Service) pingEndpoint() func(ctx *gin.Context) {
 
 func (s Service) listUsersEndpoint() func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
-
-		payload := domain.User{}
-		if err := ctx.ShouldBindJSON(&payload); err != nil {
-			fmt.Println("Error when getting the payload")
-		}
-
 		users, err := s.in.UsersProvider.List()
 		if err != "" {
 			log.Panic(err)
 		}
 
-		ctx.JSON(http.StatusCreated, users)
+		ctx.JSON(http.StatusOK, users)
+	}
+}
+
+func (s Service) registerUsersEndpoint() func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+		registerPayload := domain.User{}
+		if err := ctx.ShouldBindJSON(&registerPayload); err != nil {
+			log.Panic("Failed to parse register payload.")
+		}
+
+		registerSuccessMessage, err := s.in.UsersProvider.Register(registerPayload)
+		if err != "" {
+			log.Panic(err)
+		}
+
+		ctx.JSON(http.StatusCreated, registerSuccessMessage)
+
 	}
 }

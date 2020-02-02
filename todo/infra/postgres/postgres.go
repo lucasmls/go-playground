@@ -3,9 +3,10 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
+	"log"
+
 	_ "github.com/lib/pq" // ...
 	"github.com/lucasmls/todo/domain"
-	"log"
 )
 
 // Client ...
@@ -38,10 +39,9 @@ func NewClient(in ClientInput) *Client {
 
 // GetUsers ...
 func (c Client) GetUsers() ([]*domain.User, string) {
-	fmt.Println("@GetUsers")
-
 	rows, err := c.db.Query("SELECT * FROM users")
 	if err != nil {
+		fmt.Println(err)
 		return nil, "Failed to fetch users"
 	}
 
@@ -66,4 +66,27 @@ func (c Client) GetUsers() ([]*domain.User, string) {
 	}
 
 	return users, ""
+}
+
+// SaveUser ...
+func (c Client) SaveUser(userDto domain.User) (string, string) {
+	query := fmt.Sprintf(`
+		INSERT INTO users (name, email, age, gender, phone) VALUES ('%s', '%s', %d, '%s', '%s')`,
+		userDto.Name, userDto.Email, userDto.Age, userDto.Gender, userDto.Phone,
+	)
+
+	result, err := c.db.Exec(query)
+	if err != nil {
+		fmt.Println(err)
+		return "", "Failed to save user into db"
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+		return "", "Failed to count how much rows were affected"
+	}
+
+	successMessage := fmt.Sprintf(`User %s registered successfully (%d row affected)`, userDto.Name, rowsAffected)
+	return successMessage, ""
 }

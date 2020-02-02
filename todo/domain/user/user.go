@@ -33,3 +33,16 @@ func (s Service) List() ([]*domain.User, string) {
 
 	return users, ""
 }
+
+// Register ...
+func (s Service) Register(userDto domain.User) (string, string) {
+	fmt.Println("Register was called!")
+	fmt.Println(userDto)
+
+	successMessage, err := s.in.Postgres.SaveUser(userDto)
+	if err != "" {
+		log.Panic(err)
+	}
+
+	return successMessage, ""
+}
