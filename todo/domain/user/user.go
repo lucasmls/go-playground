@@ -23,14 +23,13 @@ func NewService(in ServiceInput) *Service {
 	return &Service{in: in}
 }
 
-// Register ...
-func (s Service) Register() ([]*domain.User, string) {
-	fmt.Println("Register was called!")
+// List ...
+func (s Service) List() ([]*domain.User, string) {
+	fmt.Println("List was called!")
 	users, err := s.in.Postgres.GetUsers()
 	if err != "" {
 		log.Panic(err)
 	}
 
-	fmt.Println(users)
 	return users, ""
 }

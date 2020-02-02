@@ -23,7 +23,7 @@ func (s Service) listUsersEndpoint() func(ctx *gin.Context) {
 			fmt.Println("Error when getting the payload")
 		}
 
-		users, err := s.in.UsersProvider.Register()
+		users, err := s.in.UsersProvider.List()
 		if err != "" {
 			log.Panic(err)
 		}
