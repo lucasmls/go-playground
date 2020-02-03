@@ -1,7 +1,6 @@
 package user
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/lucasmls/todo/domain"
@@ -25,7 +24,6 @@ func NewService(in ServiceInput) *Service {
 
 // List ...
 func (s Service) List() ([]*domain.User, string) {
-	fmt.Println("List was called!")
 	users, err := s.in.Postgres.GetUsers()
 	if err != "" {
 		log.Panic(err)
@@ -36,9 +34,6 @@ func (s Service) List() ([]*domain.User, string) {
 
 // Register ...
 func (s Service) Register(userDto domain.User) (string, string) {
-	fmt.Println("Register was called!")
-	fmt.Println(userDto)
-
 	successMessage, err := s.in.Postgres.SaveUser(userDto)
 	if err != "" {
 		log.Panic(err)

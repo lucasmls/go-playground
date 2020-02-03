@@ -70,12 +70,14 @@ func (c Client) GetUsers() ([]*domain.User, string) {
 
 // SaveUser ...
 func (c Client) SaveUser(userDto domain.User) (string, string) {
-	query := fmt.Sprintf(`
-		INSERT INTO users (name, email, age, gender, phone) VALUES ('%s', '%s', %d, '%s', '%s')`,
-		userDto.Name, userDto.Email, userDto.Age, userDto.Gender, userDto.Phone,
-	)
+	statement, stmtErr := c.db.Prepare("INSERT INTO users(name, email, age, gender, phone) VALUES ($1, $2, $3, $4, $5)")
+	if stmtErr != nil {
+		fmt.Println(stmtErr)
+		return "", "Failed to create the statement"
+	}
 
-	result, err := c.db.Exec(query)
+	result, err := statement.Exec(userDto.Name, userDto.Email, userDto.Age, userDto.Gender, userDto.Phone)
+
 	if err != nil {
 		fmt.Println(err)
 		return "", "Failed to save user into db"
