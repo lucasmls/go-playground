@@ -1,9 +1,24 @@
 package infra
 
-import "github.com/lucasmls/todo/domain"
+import (
+	"database/sql"
+)
 
 //PostgresProvider ...
 type PostgresProvider interface {
-	GetUsers() ([]*domain.User, string)
-	SaveUser(domain.User) (string, string)
+	Execute(query string, args ...interface{}) (*sql.Rows, error)
+	ExecuteOne(query string, args ...interface{}) (*sql.Row, error)
+
+	BeginTransaction() (PgTransaction, error)
+	CommitTransaction(transaction PgTransaction) error
+
+	ExecuteTransaction(transaction PgTransaction, query string, args ...interface{}) (sql.Result, error)
+	ExecuteTransactionAndQuery(transaction PgTransaction, query string, args ...interface{}) (*sql.Rows, error)
+
+	RollbackTransaction(transaction PgTransaction) error
+}
+
+// PgTransaction ...
+type PgTransaction struct {
+	Tx *sql.Tx
 }

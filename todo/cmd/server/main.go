@@ -5,6 +5,7 @@ import (
 
 	"github.com/lucasmls/todo/domain/server"
 	"github.com/lucasmls/todo/domain/user"
+	userrepository "github.com/lucasmls/todo/domain/user_repository"
 	"github.com/lucasmls/todo/infra/postgres"
 )
 
@@ -13,8 +14,12 @@ func main() {
 		Endpoint: "user=postgres port=1234 password=postgres dbname=go_todo sslmode=disable",
 	})
 
-	user := user.NewService(user.ServiceInput{
-		Postgres: postgres,
+	userRepository := userrepository.NewClient(userrepository.ClientInput{
+		Pg: postgres,
+	})
+
+	user, _ := user.NewService(user.ServiceInput{
+		Repository: userRepository,
 	})
 
 	srvr := server.NewService(server.ServiceInput{

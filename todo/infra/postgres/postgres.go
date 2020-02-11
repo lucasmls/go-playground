@@ -6,12 +6,13 @@ import (
 	"log"
 
 	_ "github.com/lib/pq" // ...
-	"github.com/lucasmls/todo/domain"
+	"github.com/lucasmls/todo/infra"
 )
 
 // Client ...
 type Client struct {
 	db *sql.DB
+	Db *sql.DB
 }
 
 // ClientInput ...
@@ -34,61 +35,63 @@ func NewClient(in ClientInput) *Client {
 		log.Panic(pingError)
 	}
 
-	return &Client{db: db}
+	return &Client{db: db, Db: db}
 }
 
-// GetUsers ...
-func (c Client) GetUsers() ([]*domain.User, string) {
-	rows, err := c.db.Query("SELECT * FROM users")
-	if err != nil {
-		fmt.Println(err)
-		return nil, "Failed to fetch users"
-	}
-
-	defer rows.Close()
-
-	users := make([]*domain.User, 0)
-
-	for rows.Next() {
-		user := new(domain.User)
-
-		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Age, &user.Gender, &user.Phone)
-		if err != nil {
-			fmt.Println(err)
-			return nil, "Failed to parse users"
-		}
-
-		users = append(users, user)
-	}
-
-	if err = rows.Err(); err != nil {
-		return nil, "Error"
-	}
-
-	return users, ""
+// Execute ...
+func (c Client) Execute(query string, args ...interface{}) (*sql.Rows, error) {
+	return c.db.Query(query, args...)
 }
 
-// SaveUser ...
-func (c Client) SaveUser(userDto domain.User) (string, string) {
-	statement, stmtErr := c.db.Prepare("INSERT INTO users(name, email, age, gender, phone) VALUES ($1, $2, $3, $4, $5)")
-	if stmtErr != nil {
-		fmt.Println(stmtErr)
-		return "", "Failed to create the statement"
+// ExecuteOne ...
+func (c Client) ExecuteOne(query string, args ...interface{}) (*sql.Row, error) {
+	return c.db.QueryRow(query, args...), nil
+}
+
+// BeginTransaction ...
+func (c Client) BeginTransaction() (infra.PgTransaction, error) {
+	transaction, err := c.db.Begin()
+	return infra.PgTransaction{Tx: transaction}, err
+}
+
+// ExecuteTransaction ...
+func (c Client) ExecuteTransaction(transaction infra.PgTransaction, query string, args ...interface{}) (sql.Result, error) {
+	if transaction.Tx == nil {
+		return nil, fmt.Errorf("The transaction is required to be executed")
 	}
 
-	result, err := statement.Exec(userDto.Name, userDto.Email, userDto.Age, userDto.Gender, userDto.Phone)
+	result, err := transaction.Tx.Exec(query, args...)
 
-	if err != nil {
-		fmt.Println(err)
-		return "", "Failed to save user into db"
+	return result, err
+}
+
+//ExecuteTransactionAndQuery ...
+func (c Client) ExecuteTransactionAndQuery(transaction infra.PgTransaction, query string, args ...interface{}) (*sql.Rows, error) {
+	if transaction.Tx == nil {
+		return nil, fmt.Errorf("The transaction is required to be executed")
 	}
 
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		fmt.Println(err)
-		return "", "Failed to count how much rows were affected"
+	result, err := transaction.Tx.Query(query, args...)
+
+	return result, err
+}
+
+// CommitTransaction ...
+func (c Client) CommitTransaction(transaction infra.PgTransaction) error {
+	if transaction.Tx == nil {
+		return fmt.Errorf("The transaction is required to be commited")
 	}
 
-	successMessage := fmt.Sprintf(`User %s registered successfully (%d row affected)`, userDto.Name, rowsAffected)
-	return successMessage, ""
+	return transaction.Tx.Commit()
+}
+
+// RollbackTransaction ...
+func (c Client) RollbackTransaction(transaction infra.PgTransaction) error {
+	if transaction.Tx == nil {
+		return fmt.Errorf("The transaction is required to execute the rollback")
+	}
+
+	transaction.Tx.Rollback()
+
+	return nil
 }

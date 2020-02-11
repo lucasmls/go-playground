@@ -17,7 +17,7 @@ func (s Service) pingEndpoint() func(ctx *gin.Context) {
 func (s Service) listUsersEndpoint() func(ctx *gin.Context) {
 	return func(ctx *gin.Context) {
 		users, err := s.in.UsersProvider.List()
-		if err != "" {
+		if err != nil {
 			log.Panic(err)
 		}
 
@@ -33,7 +33,7 @@ func (s Service) registerUsersEndpoint() func(ctx *gin.Context) {
 		}
 
 		registerSuccessMessage, err := s.in.UsersProvider.Register(registerPayload)
-		if err != "" {
+		if err != nil {
 			log.Panic(err)
 		}
 

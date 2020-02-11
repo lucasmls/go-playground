@@ -1,15 +1,15 @@
 package user
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/lucasmls/todo/domain"
-	"github.com/lucasmls/todo/infra"
 )
 
 // ServiceInput ..
 type ServiceInput struct {
-	Postgres infra.PostgresProvider
+	Repository domain.UsersRepository
 }
 
 // Service ...
@@ -18,26 +18,31 @@ type Service struct {
 }
 
 // NewService ...
-func NewService(in ServiceInput) *Service {
-	return &Service{in: in}
+func NewService(in ServiceInput) (*Service, error) {
+	if in.Repository == nil {
+		return nil, fmt.Errorf("The users repository is required")
+	}
+
+	return &Service{in: in}, nil
 }
 
 // List ...
-func (s Service) List() ([]*domain.User, string) {
-	users, err := s.in.Postgres.GetUsers()
-	if err != "" {
+func (s Service) List() ([]*domain.User, error) {
+	users, err := s.in.Repository.Find()
+	if err != nil {
 		log.Panic(err)
 	}
 
-	return users, ""
+	return users, nil
 }
 
 // Register ...
-func (s Service) Register(userDto domain.User) (string, string) {
-	successMessage, err := s.in.Postgres.SaveUser(userDto)
-	if err != "" {
+func (s Service) Register(userDto domain.User) (*domain.User, error) {
+	user, err := s.in.Repository.Save(userDto)
+	if err != nil {
 		log.Panic(err)
+		return nil, fmt.Errorf("Failed to register the user")
 	}
 
-	return successMessage, ""
+	return user, nil
 }
