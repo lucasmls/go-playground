@@ -6,6 +6,7 @@ import (
 
 	"github.com/lucasmls/todo/domain"
 	"github.com/lucasmls/todo/infra"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // ClientInput ...
@@ -69,11 +70,11 @@ func (c Client) FindOne(userID int64) (*domain.User, error) {
 	}
 
 	user := new(domain.User)
-	scanErr := row.Scan(&user.ID, &user.Name, &user.Email, &user.Age, &user.Gender, &user.Phone)
+	scanErr := row.Scan(&user.ID, &user.Name, &user.Email, &user.Age, &user.Gender, &user.Phone, &user.Password)
 
 	if scanErr != nil {
 		fmt.Println(err)
-		return nil, fmt.Errorf("Failed to parse the user")
+		return nil, scanErr
 	}
 
 	return user, nil
@@ -86,10 +87,15 @@ func (c Client) Save(userDto domain.User) (*domain.User, error) {
 		return nil, fmt.Errorf("Failed to start the transaction")
 	}
 
+	passwordHash, hashError := bcrypt.GenerateFromPassword([]byte(userDto.Password), bcrypt.DefaultCost)
+	if hashError != nil {
+		return nil, fmt.Errorf("Failed to bcrypt the user password")
+	}
+
 	result, execTxErr := c.in.Pg.ExecuteTransactionAndQuery(
 		transaction,
-		"INSERT INTO users(name, email, age, gender, phone) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-		userDto.Name, userDto.Email, userDto.Age, userDto.Gender, userDto.Phone,
+		"INSERT INTO users(name, email, password, age, gender, phone) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id",
+		userDto.Name, userDto.Email, passwordHash, userDto.Age, userDto.Gender, userDto.Phone,
 	)
 
 	if execTxErr != nil {
