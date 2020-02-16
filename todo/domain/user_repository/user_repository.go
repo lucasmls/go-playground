@@ -45,7 +45,7 @@ func (c Client) Find() ([]*domain.User, error) {
 	for rows.Next() {
 		user := new(domain.User)
 
-		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Age, &user.Gender, &user.Phone)
+		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.Age, &user.Gender, &user.Phone, &user.Password)
 		if err != nil {
 			fmt.Println(err)
 			return nil, fmt.Errorf("Failed to parse users")
