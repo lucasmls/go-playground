@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -32,12 +33,31 @@ func (s Service) registerUsersEndpoint() func(ctx *gin.Context) {
 			log.Panic("Failed to parse register payload.")
 		}
 
-		registerSuccessMessage, err := s.in.UsersProvider.Register(registerPayload)
+		user, err := s.in.UsersProvider.Register(registerPayload)
 		if err != nil {
 			log.Panic(err)
 		}
 
-		ctx.JSON(http.StatusCreated, registerSuccessMessage)
+		ctx.JSON(http.StatusCreated, user)
+
+	}
+}
+
+func (s Service) login() func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+		loginPayload := domain.LoginInput{}
+		if err := ctx.ShouldBindJSON(&loginPayload); err != nil {
+			log.Panic("Failed to parse login payload.")
+		}
+
+		user, loginErr := s.in.UsersProvider.Login(loginPayload)
+		if loginErr != nil {
+			ctx.JSON(http.StatusUnauthorized, "Failed to login")
+			return
+		}
+
+		fmt.Println("Executed????????")
+		ctx.JSON(http.StatusOK, user)
 
 	}
 }

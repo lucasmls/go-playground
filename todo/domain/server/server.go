@@ -34,6 +34,8 @@ func (s Service) Engine() *gin.Engine {
 		s.pingEndpoint(),
 	)
 
+	router.POST("/login", s.login())
+
 	usersGroup := router.Group(
 		"/user",
 	)

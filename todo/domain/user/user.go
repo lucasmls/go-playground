@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/lucasmls/todo/domain"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // ServiceInput ..
@@ -45,4 +46,20 @@ func (s Service) Register(userDto domain.User) (*domain.User, error) {
 	}
 
 	return user, nil
+}
+
+// Login ...
+func (s Service) Login(loginDto domain.LoginInput) (*domain.User, error) {
+	user, usrErr := s.in.Repository.FindByEmail(loginDto.Email)
+	if usrErr != nil {
+		log.Panic(usrErr)
+		return nil, fmt.Errorf("Failed to find the user by its email")
+	}
+
+	compareErr := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginDto.Password))
+	if compareErr != nil {
+		return nil, fmt.Errorf("Wrong password")
+	}
+
+	return nil, nil
 }

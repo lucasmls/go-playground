@@ -80,6 +80,25 @@ func (c Client) FindOne(userID int64) (*domain.User, error) {
 	return user, nil
 }
 
+// FindByEmail ...
+func (c Client) FindByEmail(email string) (*domain.User, error) {
+	row, err := c.in.Pg.ExecuteOne("SELECT * FROM users WHERE EMAIL = $1", email)
+	if err != nil {
+		fmt.Println(err)
+		return nil, fmt.Errorf("Failed to fetch users")
+	}
+
+	user := new(domain.User)
+	scanErr := row.Scan(&user.ID, &user.Name, &user.Email, &user.Age, &user.Gender, &user.Phone, &user.Password)
+
+	if scanErr != nil {
+		fmt.Println(err)
+		return nil, scanErr
+	}
+
+	return user, nil
+}
+
 // Save ...
 func (c Client) Save(userDto domain.User) (*domain.User, error) {
 	transaction, trErr := c.in.Pg.BeginTransaction()
