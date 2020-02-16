@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/lucasmls/todo/domain/server"
+	"github.com/lucasmls/todo/domain/todo"
 	"github.com/lucasmls/todo/domain/user"
 	userrepository "github.com/lucasmls/todo/domain/user_repository"
 	"github.com/lucasmls/todo/infra/jwt"
@@ -31,8 +32,11 @@ func main() {
 		JwtProvider: jwt,
 	})
 
+	todo, _ := todo.NewService(todo.ServiceInput{})
+
 	srvr := server.NewService(server.ServiceInput{
 		UsersProvider: user,
+		TodosProvider: todo,
 	})
 
 	errCh := srvr.Run()

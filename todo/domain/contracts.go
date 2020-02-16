@@ -14,3 +14,8 @@ type UsersRepository interface {
 	FindByEmail(email string) (*User, error)
 	Save(User) (*User, error)
 }
+
+// TodosProvider ...
+type TodosProvider interface {
+	List() [5]int
+}

@@ -59,3 +59,10 @@ func (s Service) login() func(ctx *gin.Context) {
 
 	}
 }
+
+func (s Service) listTodosEndpoint() func(ctx *gin.Context) {
+	return func(ctx *gin.Context) {
+		todos := s.in.TodosProvider.List()
+		ctx.JSON(http.StatusOK, todos)
+	}
+}

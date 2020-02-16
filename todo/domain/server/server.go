@@ -8,6 +8,7 @@ import (
 // ServiceInput ...
 type ServiceInput struct {
 	UsersProvider domain.UsersProvider
+	TodosProvider domain.TodosProvider
 }
 
 // Service ...
@@ -18,7 +19,7 @@ type Service struct {
 
 // NewService ...
 func NewService(in ServiceInput) *Service {
-	// here will come the dependencies of the service
+	// @TODO => Validate the inputs
 	return &Service{
 		in:    in,
 		errCh: make(chan string),
@@ -36,13 +37,12 @@ func (s Service) Engine() *gin.Engine {
 
 	router.POST("/login", s.login())
 
-	usersGroup := router.Group(
-		"/user",
-	)
-	{
-		usersGroup.GET("", s.listUsersEndpoint())
-		usersGroup.POST("", s.registerUsersEndpoint())
-	}
+	usersGroup := router.Group("/user")
+	usersGroup.GET("", s.listUsersEndpoint())
+	usersGroup.POST("", s.registerUsersEndpoint())
+
+	todosGroup := router.Group("/todo")
+	todosGroup.GET("", s.listTodosEndpoint())
 
 	return router
 }
