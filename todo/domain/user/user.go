@@ -5,12 +5,14 @@ import (
 	"log"
 
 	"github.com/lucasmls/todo/domain"
+	"github.com/lucasmls/todo/infra"
 	"golang.org/x/crypto/bcrypt"
 )
 
 // ServiceInput ..
 type ServiceInput struct {
-	Repository domain.UsersRepository
+	Repository  domain.UsersRepository
+	JwtProvider infra.JwtProvider
 }
 
 // Service ...
@@ -49,17 +51,23 @@ func (s Service) Register(userDto domain.User) (*domain.User, error) {
 }
 
 // Login ...
-func (s Service) Login(loginDto domain.LoginInput) (*domain.User, error) {
+func (s Service) Login(loginDto domain.LoginInput) (string, error) {
 	user, usrErr := s.in.Repository.FindByEmail(loginDto.Email)
 	if usrErr != nil {
 		log.Panic(usrErr)
-		return nil, fmt.Errorf("Failed to find the user by its email")
+		return "", fmt.Errorf("Failed to find the user by its email")
 	}
 
 	compareErr := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginDto.Password))
 	if compareErr != nil {
-		return nil, fmt.Errorf("Wrong password")
+		return "", fmt.Errorf("Wrong password")
 	}
 
-	return nil, nil
+	jwtToken, tknErr := s.in.JwtProvider.GenerateJWT(user.ID)
+	if tknErr != nil {
+		fmt.Println(tknErr)
+		return "", fmt.Errorf("Failed to generate the JWT")
+	}
+
+	return jwtToken, nil
 }

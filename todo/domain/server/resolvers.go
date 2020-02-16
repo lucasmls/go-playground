@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -52,11 +51,10 @@ func (s Service) login() func(ctx *gin.Context) {
 
 		user, loginErr := s.in.UsersProvider.Login(loginPayload)
 		if loginErr != nil {
-			ctx.JSON(http.StatusUnauthorized, "Failed to login")
+			ctx.JSON(http.StatusUnauthorized, loginErr.Error())
 			return
 		}
 
-		fmt.Println("Executed????????")
 		ctx.JSON(http.StatusOK, user)
 
 	}

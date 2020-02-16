@@ -18,6 +18,11 @@ type PostgresProvider interface {
 	RollbackTransaction(transaction PgTransaction) error
 }
 
+// JwtProvider ...
+type JwtProvider interface {
+	GenerateJWT(userID string) (string, error)
+}
+
 // PgTransaction ...
 type PgTransaction struct {
 	Tx *sql.Tx

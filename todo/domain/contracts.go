@@ -4,7 +4,7 @@ package domain
 type UsersProvider interface {
 	List() ([]*User, error)
 	Register(user User) (*User, error)
-	Login(loginInput LoginInput) (*User, error)
+	Login(loginInput LoginInput) (string, error)
 }
 
 // UsersRepository ...
