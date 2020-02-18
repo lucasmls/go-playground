@@ -21,6 +21,7 @@ type PostgresProvider interface {
 // JwtProvider ...
 type JwtProvider interface {
 	GenerateJWT(userID string) (string, error)
+	ValidateJWT(tokenToValidate string) (*DecodedJWT, error)
 }
 
 // PgTransaction ...

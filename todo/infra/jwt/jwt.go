@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/lucasmls/todo/infra"
 )
 
 // Client ...
@@ -48,4 +49,32 @@ func (c Client) GenerateJWT(userID string) (string, error) {
 	}
 
 	return token, nil
+}
+
+// ValidateJWT ...
+func (c Client) ValidateJWT(tokenToValidate string) (*infra.DecodedJWT, error) {
+	token, parseErr := jwt.Parse(tokenToValidate, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		return []byte(c.in.Secret), nil
+	})
+
+	if parseErr != nil {
+		return nil, fmt.Errorf("Failed to parse the JWT")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+
+	if !ok && !token.Valid {
+		return nil, fmt.Errorf("Invalid token")
+	}
+
+	decodedJWT := infra.DecodedJWT{
+		UserID: claims["userID"].(string),
+		Exp:    int64(claims["exp"].(float64)),
+	}
+
+	return &decodedJWT, nil
 }
