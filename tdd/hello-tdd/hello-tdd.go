@@ -3,6 +3,24 @@ package main
 import "fmt"
 
 const englishHelloPrefix = "Hello, "
+const portugueseHelloPrefix = "Olá, "
+const spanishHelloPrefix = "Hola, "
+const frenchHelloPrefix = "Bonjour, "
+
+func getGreetingPrefix(language string) string {
+	prefix := englishHelloPrefix
+
+	switch language {
+	case "Portuguese":
+		prefix = portugueseHelloPrefix
+	case "Spanish":
+		prefix = spanishHelloPrefix
+	case "French":
+		prefix = frenchHelloPrefix
+	}
+
+	return prefix
+}
 
 // Hello ...
 func Hello(name, language string) string {
@@ -10,19 +28,9 @@ func Hello(name, language string) string {
 		name = "World"
 	}
 
-	if language == "Portuguese" {
-		return "Olá, " + name
-	}
+	prefix := getGreetingPrefix(language)
 
-	if language == "Spanish" {
-		return "Hola, " + name
-	}
-
-	if language == "French" {
-		return "Bonjour, " + name
-	}
-
-	return englishHelloPrefix + name
+	return prefix + name
 }
 
 func main() {
