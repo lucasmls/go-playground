@@ -39,3 +39,23 @@ func TestSumAll(t *testing.T) {
 		}
 	})
 }
+
+func TestSumAllTails(t *testing.T) {
+	t.Run("expect to sum only the tail of the slices", func(t *testing.T) {
+		got := SumAllTails([]int{1, 2}, []int{0, 9})
+		want := []int{2, 9}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got '%v' want '%v", got, want)
+		}
+	})
+
+	t.Run("expect to safely sum the slices tail", func(t *testing.T) {
+		got := SumAllTails([]int{}, []int{3, 4, 5})
+		want := []int{0, 9}
+
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got '%v' want '%v", got, want)
+		}
+	})
+}
