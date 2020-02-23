@@ -1,17 +1,29 @@
 package geometry
 
+import "math"
+
 // Rectangle ...
 type Rectangle struct {
-	width  float64
-	height float64
+	Width  float64
+	Height float64
+}
+
+// Circle ...
+type Circle struct {
+	Radius float64
 }
 
 // Perimeter ...
 func Perimeter(rect Rectangle) float64 {
-	return 2 * (rect.width + rect.height)
+	return 2 * (rect.Width + rect.Height)
 }
 
 // Area ...
-func Area(rect Rectangle) float64 {
-	return rect.width * rect.height
+func (r Rectangle) Area() float64 {
+	return r.Width * r.Height
+}
+
+// Area ...
+func (c Circle) Area() float64 {
+	return math.Pi * c.Radius * c.Radius
 }
