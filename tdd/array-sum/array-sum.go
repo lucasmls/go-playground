@@ -1,4 +1,4 @@
-package sum
+package operations
 
 // Sum ...
 func Sum(numbers []int) int {
@@ -8,4 +8,15 @@ func Sum(numbers []int) int {
 	}
 
 	return sum
+}
+
+// SumAll ...
+func SumAll(listsToSum ...[]int) []int {
+	var sums []int
+
+	for _, numbers := range listsToSum {
+		sums = append(sums, Sum(numbers))
+	}
+
+	return sums
 }
