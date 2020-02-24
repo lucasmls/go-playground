@@ -1,6 +1,9 @@
 package dictionary
 
+// Dictionary ...
+type Dictionary map[string]string
+
 // Search ...
-func Search(dictionary map[string]string, word string) string {
-	return dictionary[word]
+func (d Dictionary) Search(dictionary map[string]string, word string) string {
+	return d[word]
 }
