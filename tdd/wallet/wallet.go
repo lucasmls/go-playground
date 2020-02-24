@@ -1,6 +1,9 @@
 package wallet
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // Stringer ...
 type Stringer interface {
@@ -25,8 +28,13 @@ func (w *Wallet) Deposit(amount Bitcoin) {
 }
 
 // Withdraw ...
-func (w *Wallet) Withdraw(amount Bitcoin) {
+func (w *Wallet) Withdraw(amount Bitcoin) error {
+	if amount > w.balance {
+		return errors.New("Insufficient funds to withdraw from wallet")
+	}
+
 	w.balance -= amount
+	return nil
 }
 
 // Balance ...
