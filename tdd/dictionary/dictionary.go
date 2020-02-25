@@ -1,15 +1,21 @@
 package dictionary
 
-import "errors"
+// DictionaryErr ...
+type DictionaryErr string
+
+func (de DictionaryErr) Error() string {
+	return string(de)
+}
+
+const (
+	// ErrNotFound ...
+	ErrNotFound = DictionaryErr("could not find the word you were looking for")
+	// ErrWordExists ...
+	ErrWordExists = DictionaryErr("cannot add word because it already exists")
+)
 
 // Dictionary ...
 type Dictionary map[string]string
-
-// ErrNotFound ...
-var ErrNotFound = errors.New("could not find the word you were looking for")
-
-// ErrWordExists ...
-var ErrWordExists = errors.New("duplicated word")
 
 // Search ...
 func (d Dictionary) Search(word string) (string, error) {
