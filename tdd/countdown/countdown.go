@@ -7,20 +7,34 @@ import (
 	"time"
 )
 
+// Sleeper ...
+type Sleeper interface {
+	Sleep()
+}
+
+// CountdownSleeper ...
+type CountdownSleeper struct{}
+
+// Sleep ...
+func (d CountdownSleeper) Sleep() {
+	time.Sleep(1 * time.Second)
+}
+
 const finalWorld = "Go!"
 const countdowStart = 3
 
 // Countdown ...
-func Countdown(out io.Writer) {
+func Countdown(out io.Writer, sleeper Sleeper) {
 	for i := countdowStart; i > 0; i-- {
-		time.Sleep(1 * time.Second)
+		sleeper.Sleep()
 		fmt.Fprintln(out, i)
 	}
 
-	time.Sleep(1 * time.Second)
+	sleeper.Sleep()
 	fmt.Fprint(out, finalWorld)
 }
 
 func main() {
-	Countdown(os.Stdout)
+	sleeper := &CountdownSleeper{}
+	Countdown(os.Stdout, sleeper)
 }
