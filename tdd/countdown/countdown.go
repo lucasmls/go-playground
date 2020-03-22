@@ -21,11 +21,11 @@ func (d CountdownSleeper) Sleep() {
 }
 
 const finalWorld = "Go!"
-const countdowStart = 3
+const countdownStart = 3
 
 // Countdown ...
 func Countdown(out io.Writer, sleeper Sleeper) {
-	for i := countdowStart; i > 0; i-- {
+	for i := countdownStart; i > 0; i-- {
 		sleeper.Sleep()
 		fmt.Fprintln(out, i)
 	}
