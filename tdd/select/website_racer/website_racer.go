@@ -2,23 +2,24 @@ package race
 
 import (
 	"net/http"
-	"time"
 )
 
-func measureRequestTime(url string) time.Duration {
-	startTime := time.Now()
-	http.Get(url)
-	return time.Since(startTime)
+func pingEndpoint(url string) chan struct{} {
+	ch := make(chan struct{})
+	go func() {
+		http.Get(url)
+		close(ch)
+	}()
+
+	return ch
 }
 
 // Race ...
 func Race(a string, b string) string {
-	aDuration := measureRequestTime(a)
-	bDuration := measureRequestTime(b)
-
-	if aDuration < bDuration {
+	select {
+	case <-pingEndpoint(a):
 		return a
+	case <-pingEndpoint(b):
+		return b
 	}
-
-	return b
 }
