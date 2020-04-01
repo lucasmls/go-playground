@@ -5,15 +5,16 @@ import (
 	"time"
 )
 
+func measureRequestTime(url string) time.Duration {
+	startTime := time.Now()
+	http.Get(url)
+	return time.Since(startTime)
+}
+
 // Race ...
 func Race(a string, b string) string {
-	startA := time.Now()
-	http.Get(a)
-	aDuration := time.Since(startA)
-
-	startB := time.Now()
-	http.Get(b)
-	bDuration := time.Since(startB)
+	aDuration := measureRequestTime(a)
+	bDuration := measureRequestTime(b)
 
 	if aDuration < bDuration {
 		return a
