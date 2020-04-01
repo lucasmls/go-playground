@@ -19,7 +19,11 @@ func TestRace(t *testing.T) {
 		fastURL := fastServer.URL
 
 		want := fastURL
-		got, _ := Race(slowURL, fastURL)
+		got, err := Race(slowURL, fastURL)
+
+		if err != nil {
+			t.Fatalf("did not expect an error but got one %v", err)
+		}
 
 		if got != want {
 			t.Errorf("got: %q wanted: %q", got, want)
@@ -27,13 +31,11 @@ func TestRace(t *testing.T) {
 	})
 
 	t.Run("should return a error if the website server doesn't respond within 10s", func(t *testing.T) {
-		serverA := makeDelayedServer(11 * time.Second)
-		serverB := makeDelayedServer(12 * time.Second)
+		server := makeDelayedServer(25 * time.Millisecond)
 
-		defer serverA.Close()
-		defer serverB.Close()
+		defer server.Close()
 
-		_, err := Race(serverA.URL, serverB.URL)
+		_, err := ConfigurableRace(server.URL, server.URL, 20*time.Millisecond)
 
 		if err == nil {
 			t.Errorf("expected a error, but didn't get one")

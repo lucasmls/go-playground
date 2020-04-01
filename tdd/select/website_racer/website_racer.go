@@ -18,12 +18,18 @@ func pingEndpoint(url string) chan struct{} {
 
 // Race ...
 func Race(a string, b string) (string, error) {
+	const tenSecondTimeout = 10 * time.Second
+	return ConfigurableRace(a, b, tenSecondTimeout)
+}
+
+// ConfigurableRace ...
+func ConfigurableRace(a, b string, timeout time.Duration) (string, error) {
 	select {
 	case <-pingEndpoint(a):
 		return a, nil
 	case <-pingEndpoint(b):
 		return b, nil
-	case <-time.After(10 * time.Second):
+	case <-time.After(timeout):
 		return "", fmt.Errorf("timed out waiting for %s and %s", a, b)
 	}
 }
