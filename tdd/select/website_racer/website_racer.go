@@ -1,7 +1,9 @@
 package race
 
 import (
+	"fmt"
 	"net/http"
+	"time"
 )
 
 func pingEndpoint(url string) chan struct{} {
@@ -15,11 +17,13 @@ func pingEndpoint(url string) chan struct{} {
 }
 
 // Race ...
-func Race(a string, b string) string {
+func Race(a string, b string) (string, error) {
 	select {
 	case <-pingEndpoint(a):
-		return a
+		return a, nil
 	case <-pingEndpoint(b):
-		return b
+		return b, nil
+	case <-time.After(10 * time.Second):
+		return "", fmt.Errorf("timed out waiting for %s and %s", a, b)
 	}
 }
