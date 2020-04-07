@@ -5,12 +5,14 @@ import (
 	"testing"
 )
 
+type testCase struct {
+	Name          string
+	ExpectedCalls []string
+	Input         interface{}
+}
+
 func TestWalk(t *testing.T) {
-	testCases := []struct {
-		Name          string
-		ExpectedCalls []string
-		Input         interface{}
-	}{
+	testCases := []testCase{
 		{
 			Name:          "Struct with one string field.",
 			ExpectedCalls: []string{"Lucas"},
@@ -26,6 +28,15 @@ func TestWalk(t *testing.T) {
 				Name    string
 				Surname string
 			}{Name: "Lucas", Surname: "Mendes"},
+		},
+
+		{
+			Name:          "Struct with non string field",
+			ExpectedCalls: []string{"Lucas"},
+			Input: struct {
+				Name string
+				Age  int
+			}{Name: "Lucas", Age: 20},
 		},
 	}
 
