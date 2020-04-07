@@ -11,6 +11,16 @@ type testCase struct {
 	Input         interface{}
 }
 
+type Person struct {
+	Name    string
+	Profile Profile
+}
+
+type Profile struct {
+	Age  int
+	City string
+}
+
 func TestWalk(t *testing.T) {
 	testCases := []testCase{
 		{
@@ -37,6 +47,18 @@ func TestWalk(t *testing.T) {
 				Name string
 				Age  int
 			}{Name: "Lucas", Age: 20},
+		},
+
+		{
+			Name:          "Nested fields",
+			ExpectedCalls: []string{"Lucas", "Toronto"},
+			Input: Person{
+				Name: "Lucas",
+				Profile: Profile{
+					Age:  20,
+					City: "Toronto",
+				},
+			},
 		},
 	}
 
