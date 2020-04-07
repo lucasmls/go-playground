@@ -90,6 +90,15 @@ func TestWalk(t *testing.T) {
 				{Age: 21, City: "North Vancouver"},
 			},
 		},
+
+		{
+			Name:          "Maps",
+			ExpectedCalls: []string{"Bar", "Foo"},
+			Input: map[string]string{
+				"Foo": "Bar",
+				"Bar": "Foo",
+			},
+		},
 	}
 
 	for _, test := range testCases {

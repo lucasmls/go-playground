@@ -16,6 +16,11 @@ func walk(x interface{}, fn func(input string)) {
 		numberOfValues = val.NumField()
 		getField = val.Field
 
+	case reflect.Map:
+		for _, key := range val.MapKeys() {
+			walk(val.MapIndex(key).Interface(), fn)
+		}
+
 	case reflect.Slice, reflect.Array:
 		numberOfValues = val.Len()
 		getField = val.Index
