@@ -60,6 +60,18 @@ func TestWalk(t *testing.T) {
 				},
 			},
 		},
+
+		{
+			Name:          "Pointer to things",
+			ExpectedCalls: []string{"Lucas", "Toronto"},
+			Input: &Person{
+				Name: "Lucas",
+				Profile: Profile{
+					Age:  20,
+					City: "Toronto",
+				},
+			},
+		},
 	}
 
 	for _, test := range testCases {
