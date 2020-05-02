@@ -8,6 +8,11 @@ type Counter struct {
 	mu    sync.Mutex
 }
 
+// NewCounter ...
+func NewCounter() *Counter {
+	return &Counter{}
+}
+
 // Increment ...
 func (c *Counter) Increment() {
 	c.mu.Lock()

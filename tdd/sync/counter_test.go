@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func assertCounterValue(t *testing.T, got Counter, want int) {
+func assertCounterValue(t *testing.T, got *Counter, want int) {
 	t.Helper()
 
 	if got.Value() != want {
@@ -15,7 +15,7 @@ func assertCounterValue(t *testing.T, got Counter, want int) {
 func TestCounter(t *testing.T) {
 
 	t.Run("incrementing the counting three times leaves it at 3", func(t *testing.T) {
-		counter := Counter{}
+		counter := NewCounter()
 		counter.Increment()
 		counter.Increment()
 		counter.Increment()
@@ -25,7 +25,7 @@ func TestCounter(t *testing.T) {
 
 	t.Run("it runs safely concurrently", func(t *testing.T) {
 		wantedCount := 1000
-		counter := Counter{}
+		counter := NewCounter()
 
 		var wg sync.WaitGroup
 		wg.Add(wantedCount)
