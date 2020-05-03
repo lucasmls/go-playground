@@ -49,6 +49,31 @@ func TestRomanNumerals(t *testing.T) {
 			Arabic:      8,
 			Want:        "VIII",
 		},
+		{
+			Description: `9 gets converted to IX`,
+			Arabic:      9,
+			Want:        "IX",
+		},
+		{
+			Description: `10 gets converted to X`,
+			Arabic:      10,
+			Want:        "X",
+		},
+		{
+			Description: `11 gets converted to XI`,
+			Arabic:      11,
+			Want:        "XI",
+		},
+		{
+			Description: `12 gets converted to XII`,
+			Arabic:      12,
+			Want:        "XII",
+		},
+		{
+			Description: `13 gets converted to XIII`,
+			Arabic:      13,
+			Want:        "XIII",
+		},
 	}
 
 	for _, test := range cases {
