@@ -3,16 +3,16 @@ package numerals
 import "strings"
 
 // ConvertToRoman converts a arabic number to a roman number
-func ConvertToRoman(num int) string {
+func ConvertToRoman(arabic int) string {
 	var result strings.Builder
 
-	for i := num; i > 0; i-- {
-		if num == 5 {
+	for i := arabic; i > 0; i-- {
+		if arabic == 5 {
 			result.WriteString("V")
 			break
 		}
 
-		if num == 4 {
+		if arabic == 4 {
 			result.WriteString("IV")
 			break
 		}
