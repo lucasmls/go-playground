@@ -94,6 +94,41 @@ func TestRomanNumerals(t *testing.T) {
 			Arabic:      39,
 			Want:        "XXXIX",
 		},
+		{
+			Description: "50 gets converted to L",
+			Arabic:      50,
+			Want:        "L",
+		},
+		{
+			Description: "100 gets converted to C",
+			Arabic:      100,
+			Want:        "C",
+		},
+		{
+			Description: "500 gets converted to D",
+			Arabic:      500,
+			Want:        "D",
+		},
+		{
+			Description: "1000 gets converted to M",
+			Arabic:      1000,
+			Want:        "M",
+		},
+		{
+			Description: "1984 gets converted to MCMLXXXIV",
+			Arabic:      1984,
+			Want:        "MCMLXXXIV",
+		},
+		{
+			Description: "798 gets converted to DCCXCVIII",
+			Arabic:      798,
+			Want:        "DCCXCVIII",
+		},
+		{
+			Description: "1006 gets converted to MVI",
+			Arabic:      1006,
+			Want:        "MVI",
+		},
 	}
 
 	for _, test := range cases {
