@@ -5,11 +5,10 @@ import (
 	"testing"
 )
 
-func Test_ConvertToRoman(t *testing.T) {
-
-	cases := []struct {
+var (
+	cases = []struct {
 		Arabic int
-		Want   string
+		Roman  string
 	}{
 		{1, "I"},
 		{2, "II"},
@@ -36,11 +35,13 @@ func Test_ConvertToRoman(t *testing.T) {
 		{798, "DCCXCVIII"},
 		{1006, "MVI"},
 	}
+)
 
+func Test_ConvertToRoman(t *testing.T) {
 	for _, test := range cases {
-		t.Run(fmt.Sprintf("convert %d to %s", test.Arabic, test.Want), func(t *testing.T) {
+		t.Run(fmt.Sprintf("convert %d to %s", test.Arabic, test.Roman), func(t *testing.T) {
 			got := ConvertToRoman(test.Arabic)
-			want := test.Want
+			want := test.Roman
 
 			if got != want {
 				t.Errorf(`got %q want %q`, got, want)
