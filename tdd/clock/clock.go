@@ -28,5 +28,10 @@ func secondHandPoint(t time.Time) Point {
 // SecondHand is the unit vector of the second hand of a analogue clock at time 't'
 // represented as a Point.
 func SecondHand(t time.Time) Point {
-	return Point{150, 60}
+	p := secondHandPoint(t)
+	p = Point{p.X * 90, p.Y * 90}   // scale
+	p = Point{p.X, -p.Y}            // flip
+	p = Point{p.X + 150, p.Y + 150} // translate
+
+	return p
 }
