@@ -4,7 +4,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/lucasmls/tdd/clock"
+	clock "github.com/lucasmls/tdd/clockface/svg"
 )
 
 func main() {

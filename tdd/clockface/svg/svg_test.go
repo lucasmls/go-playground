@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lucasmls/tdd/clock"
+	clock "github.com/lucasmls/tdd/clockface/svg"
 )
 
 type SVG struct {

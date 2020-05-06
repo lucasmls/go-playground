@@ -1,9 +1,11 @@
-package clock
+package clock_test
 
 import (
 	"math"
 	"testing"
 	"time"
+
+	clock "github.com/lucasmls/tdd/clockface"
 )
 
 func testName(t time.Time) string {
@@ -19,22 +21,22 @@ func roughlyEqualFloat64(a, b float64) bool {
 	return math.Abs(a-b) < equalityThreshold
 }
 
-func roughlyEqualPoint(a, b Point) bool {
+func roughlyEqualPoint(a, b clock.Point) bool {
 	return roughlyEqualFloat64(a.X, b.X) && roughlyEqualFloat64(a.Y, b.Y)
 }
 
 func Test_SecondHandPoint(t *testing.T) {
 	cases := []struct {
 		time  time.Time
-		point Point
+		point clock.Point
 	}{
-		{time: simpleTime(0, 0, 30), point: Point{0, -1}},
-		{time: simpleTime(0, 0, 45), point: Point{-1, 0}},
+		{time: simpleTime(0, 0, 30), point: clock.Point{0, -1}},
+		{time: simpleTime(0, 0, 45), point: clock.Point{-1, 0}},
 	}
 
 	for _, c := range cases {
 		t.Run(testName(c.time), func(t *testing.T) {
-			got := secondHandPoint(c.time)
+			got := clock.SecondHandPoint(c.time)
 			want := c.point
 
 			if !roughlyEqualPoint(got, want) {
@@ -58,7 +60,7 @@ func Test_SecondsInRadians(t *testing.T) {
 
 	for _, c := range cases {
 		want := c.angle
-		got := secondsInRadians(c.time)
+		got := clock.SecondsInRadians(c.time)
 
 		if want != got {
 			t.Fatalf("Wanted %v radians, but got %v", want, got)
@@ -69,15 +71,15 @@ func Test_SecondsInRadians(t *testing.T) {
 func Test_MinuteHandPoint(t *testing.T) {
 	cases := []struct {
 		time  time.Time
-		point Point
+		point clock.Point
 	}{
-		{simpleTime(0, 30, 0), Point{0, -1}},
-		{simpleTime(0, 45, 0), Point{-1, 0}},
+		{simpleTime(0, 30, 0), clock.Point{0, -1}},
+		{simpleTime(0, 45, 0), clock.Point{-1, 0}},
 	}
 
 	for _, c := range cases {
 		t.Run(testName(c.time), func(t *testing.T) {
-			got := minuteHandPoint(c.time)
+			got := clock.MinuteHandPoint(c.time)
 			want := c.point
 
 			if !roughlyEqualPoint(got, want) {
@@ -98,7 +100,7 @@ func Test_MinutesInRadians(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(testName(c.time), func(t *testing.T) {
-			got := minutesInRadians(c.time)
+			got := clock.MinutesInRadians(c.time)
 			want := c.angle
 
 			if got != want {
@@ -121,7 +123,7 @@ func TestHourInRadians(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(testName(c.time), func(t *testing.T) {
-			got := hoursInRadians(c.time)
+			got := clock.HoursInRadians(c.time)
 			want := c.angle
 
 			if !roughlyEqualFloat64(got, want) {
@@ -134,15 +136,15 @@ func TestHourInRadians(t *testing.T) {
 func Test_HourHandPoint(t *testing.T) {
 	cases := []struct {
 		time  time.Time
-		point Point
+		point clock.Point
 	}{
-		{simpleTime(6, 0, 0), Point{0, -1}},
-		{simpleTime(21, 0, 0), Point{-1, 0}},
+		{simpleTime(6, 0, 0), clock.Point{0, -1}},
+		{simpleTime(21, 0, 0), clock.Point{-1, 0}},
 	}
 
 	for _, c := range cases {
 		t.Run(testName(c.time), func(t *testing.T) {
-			got := hourHandPoint(c.time)
+			got := clock.HourHandPoint(c.time)
 			want := c.point
 
 			if !roughlyEqualPoint(got, want) {
