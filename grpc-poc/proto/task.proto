@@ -14,7 +14,7 @@ message CreateTaskPayload {
 }
 
 message CreateTaskResponse {
-  int32 taskId = 1;
+  string taskId = 1;
 }
 
 service TaskService {
