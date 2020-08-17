@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package todo;
+
+option go_package = "pb";
+
+message Task {
+  string title = 1;
+  bool done = 2;
+}
+
+message CreateTaskPayload {
+  Task task = 1;
+}
+
+message CreateTaskResponse {
+  int32 taskId = 1;
+}
+
+service TaskService {
+  rpc Create (CreateTaskPayload) returns (CreateTaskResponse) {};
+}
